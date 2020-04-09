@@ -5,7 +5,7 @@ import psycopg2 as ps2
 
 try:
     #Ouverture de la connexion avec la base de données
-    connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="insee", user="martindrance", password="dcf1e82603")
+    connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="myDB", user="myUser", password="myPassword")
     cursor = connection.cursor()
 
     #Création/remplissage de le table departements
