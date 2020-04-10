@@ -7,14 +7,14 @@ cursor = connection.cursor()
 #QUESTION 1
 def liste_regions():
     cursor.execute("select libelle from regions;")
-    print ("Les régions contenues dans la base de données sont :")
+    print ("Les régions contenues dans la base de données sont : ")
     for reg in cursor.fetchall():
         print(reg[0])
 
 #QUESTION 2
 def liste_departements():
     cursor.execute("select libelle from departements;")
-    print ("Les departements contenus dans la base de données sont :")
+    print ("Les departements contenus dans la base de données sont : ")
     for dep in cursor.fetchall():
         print(dep[0])
 
@@ -65,7 +65,6 @@ def dep_infos():
             print("% Autres énergies 2015 : ", infos[14])
             print("% Autres énergies 2010 : ", infos[15])
 
-
 #QUESTION 5
 def energie_info():
     choix = input ("Choisissez un type d'énergie (eolien, photovoltaique ou autres) à consulter (e/p/a) : ")
@@ -95,19 +94,44 @@ def energie_info():
 
 #QUESTION 6
 def prod_granulats():
-    cursor.execute("""select D1.nccenr from departements D1 where D1.reg in 
+    cursor.execute("""select D1.libelle from departements D1 where D1.reg in 
                 (select R1.reg from departements D1 join departementenvironnement E1 on D1.nccenr = E1.dep join regions R1 on R1.reg = D1.reg 
                 group by R1.reg having sum(prodgranu14) > 25000000);""")
     print ("Départements dont la région a produit plus de 25 000 000 tonnes de granulats en 2014 :")
     for i in cursor.fetchall():
         print("Département : ",i[0])
-        # print("Production : ", i[1])
 
 #QUESTION 7
 def max_eolienne():
-    cursor.execute("""select dep, eolien15 from departementenvironnement where eolien15 is not null order by eolien15 desc limit 5""")
+    cursor.execute("select dep, eolien15 from departementenvironnement where eolien15 < 101 order by eolien15 desc limit 5")
     print ("Les 5 départements avec le plus grand taux d'énergie eolienne en 2015 sont :")
     for i in cursor:
-        print(i[0], "avec", i[1],"%")
+        print(i[0], "avec", i[1], "%")
 
-max_eolienne()
+#QUESTION 8
+def faible_taux_orga():
+    cursor.execute("""select R1.libelle from regions R1 join departements D1 on R1.reg = D1.reg join 
+                    departementenvironnement E1 on D1.libelle = E1.dep order by valoorga13 asc limit 1;""")
+    for i in cursor.fetchall():
+        print("Le département qui à le plus faible taux de valorisation matière et organique en 2013 se situe en", i[0])
+
+#QUESTION 9
+def agribiosante():
+    cursor.execute("""select E1.agribio16, E1.dep, S1.pop7min from departementenvironnement E1 join
+                     departementsocial S1 on E1.dep = S1.dep where S1.pop7min < 101 order by S1.pop7min desc limit 1;""")
+    for i in cursor:
+        print("Part de l'agriculture biologique dans le departement ayant le pourcentage le plus élevé de population éloigné de 7min des services de santé en 2016 :")
+        print("Departement :",i[1])
+        print("Population à plus de 7min des services de santé :", i[2], "%")
+        print("Agriculture biologique :", i[0], "%")
+
+#QUESTION 10
+def pauvrejeunes():
+    cursor.execute("""select reg, jeunesnoninseres2014, pauvrete from regionsocial where jeunesnoninseres2014 > 30 and jeunesnoninseres2014 < 101 and pauvrete < 101;""")
+    for i in cursor:
+        print("Région :",i[0])
+        print("Jeunes non insérés :", round(i[1], 2), "%")
+        print("Taux pauvreté 2014 :", round(i[2], 2))
+        
+
+pauvrejeunes()

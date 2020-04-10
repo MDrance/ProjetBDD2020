@@ -95,7 +95,6 @@ try:
         rows_departement_env = df3.iloc[i]
         cursor.execute("insert into departementenvironnement values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", rows_departement_env)
 
-
     connection.commit()
 
 except(Exception, ps2.Error) as error:     # gestion des erreurs
@@ -106,6 +105,3 @@ finally:
         cursor.close()
         connection.close()
         print("Base de donnée prête à l'utilisation.")
-
-
-
