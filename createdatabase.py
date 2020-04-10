@@ -5,7 +5,7 @@ import psycopg2 as ps2
 
 try:
     #Ouverture de la connexion avec la base de données
-    connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="myDB", user="myUser", password="myPassword")
+    connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="myDB", user="myID", password="myPW")
     cursor = connection.cursor()
 
     #Création/remplissage de le table departements
@@ -39,7 +39,7 @@ try:
 
     #Création/remplissage de la table regionsocial
     cursor.execute("""create table regionsocial(
-        cheflieu varchar(10) primary key, 
+        num varchar(10) primary key, 
         reg varchar(50), 
         pauvrete float, 
         jeunesnoninseres2014 float, 
@@ -54,7 +54,7 @@ try:
         
     #Création/remplissage de la table departementsocial
     cursor.execute("""create table departementsocial(
-        cheflieu varchar(10) primary key, 
+        num varchar(10) primary key, 
         dep varchar(50), 
         esph15 float, 
         esph10 float, 
@@ -72,7 +72,7 @@ try:
 
     #Création/remplissage de la table departementenvironnement
     cursor.execute("""create table departementenvironnement(
-        cheflieu varchar(10) primary key, 
+        num varchar(10) primary key, 
         dep varchar(50), 
         valoorga13 float, 
         valoorda09 float, 
