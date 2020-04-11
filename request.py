@@ -133,5 +133,6 @@ def pauvrejeunes():
         print("Jeunes non insérés :", round(i[1], 2), "%")
         print("Taux pauvreté 2014 :", round(i[2], 2))
         
-
-pauvrejeunes()
+#QUESTION 11
+def ecosoc():
+    
