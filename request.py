@@ -2,7 +2,7 @@ import psycopg2 as ps2
 import sys
 
 #Ouverture de la connexion avec la base de données
-connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="myDB", user="myID", password="myPW")
+connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="insee", user="martindrance", password="dcf1e82603")
 cursor = connection.cursor()
 
 #QUESTION 1
@@ -72,21 +72,21 @@ def energie_info():
     while choix not in ["e", "p", "a"]:
         choix = input("Mauvaise saisie, choisissez entre e/p/a : ")
     if choix == "e":
-        cursor.execute("select dep, eolien10, eolien15 from departementenvironnement where eolien10 < eolien15 order by eolien15 - eolien10 desc")
+        cursor.execute("select dep, eolien10, eolien15 from departementenvironnement where eolien10 < eolien15 order by eolien15 - eolien10 desc;")
         for i in cursor:
             print ("Département : ",i[0])
             print ("Eolien 2010 : ", i[1])
             print ("Eolien 2015 :", i[2])
             print ("Augmentation de :", round(i[2]-i[1], 2), "points\n")
     elif choix == "p":
-        cursor.execute("select dep, voltaique10, voltaique15 from departementenvironnement where voltaique10 < voltaique15 order by voltaique15 - voltaique10 desc")
+        cursor.execute("select dep, voltaique10, voltaique15 from departementenvironnement where voltaique10 < voltaique15 order by voltaique15 - voltaique10 desc;")
         for i in cursor:
             print ("Département : ",i[0])
             print ("Photovoltaique 2010 : ", i[1])
             print ("Photovoltaique 2015 :", i[2])
             print ("Augmentation de :", round(i[2]-i[1], 2), "points\n")
     elif choix == "a":
-        cursor.execute("select dep, autre10, autre15 from departementenvironnement where autre10 < autre15 order by autre15 - autre10 desc")
+        cursor.execute("select dep, autre10, autre15 from departementenvironnement where autre10 < autre15 order by autre15 - autre10 desc;")
         for i in cursor:
             print ("Département : ",i[0])
             print ("Autres énergies 2010 : ", i[1])
@@ -104,7 +104,7 @@ def prod_granulats():
 
 #QUESTION 7
 def max_eolienne():
-    cursor.execute("select dep, eolien15 from departementenvironnement where eolien15 < 101 order by eolien15 desc limit 5")
+    cursor.execute("select dep, eolien15 from departementenvironnement where eolien15 < 101 order by eolien15 desc limit 5;")
     print ("Les 5 départements avec le plus grand taux d'énergie eolienne en 2015 sont :")
     for i in cursor:
         print(i[0], "avec", i[1], "%")
@@ -137,8 +137,8 @@ def pauvrejeunes():
 #QUESTION 11
 def ecosoc():
     cursor.execute("""select R1.libelle, R2.poidssocial from departementenvironnement E1 join departements D1 on D1.nccenr = E1.dep join regions R1 on R1.reg = D1.reg join
-    regionsocial R2 ON R1.nccenr = R2.reg group by R1.libelle, R2.poidssocial having (sum(E1.voltaique15)/count(R2.reg)) > 10 and
-    (sum(E1.agribio16)/count(R2.reg)) > 5;""")
+    regionsocial R2 ON R1.nccenr = R2.reg group by R1.libelle, R2.poidssocial having (sum(E1.voltaique15)/count(E1.dep1)) > 10 and
+    (sum(E1.agribio16)/count(E1.dep)) > 5;""")
     for i in cursor:
         print ("Régions : ", i[0])
         print ("Poids de l'économie sociale :", i[1])
