@@ -137,7 +137,7 @@ def pauvrejeunes():
 #QUESTION 11
 def ecosoc():
     cursor.execute("""select R1.libelle, R2.poidssocial from departementenvironnement E1 join departements D1 on D1.nccenr = E1.dep join regions R1 on R1.reg = D1.reg join
-    regionsocial R2 ON R1.nccenr = R2.reg group by R1.libelle, R2.poidssocial having (sum(E1.voltaique15)/count(E1.dep1)) > 10 and
+    regionsocial R2 ON R1.nccenr = R2.reg group by R1.libelle, R2.poidssocial having (sum(E1.voltaique15)/count(E1.dep)) > 10 and
     (sum(E1.agribio16)/count(E1.dep)) > 5;""")
     for i in cursor:
         print ("Régions : ", i[0])
