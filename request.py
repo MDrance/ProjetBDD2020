@@ -1,7 +1,8 @@
 import psycopg2 as ps2
+import sys
 
 #Ouverture de la connexion avec la base de données
-connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="insee", user="martindrance", password="dcf1e82603")
+connection = ps2.connect(host= "127.0.0.1", port="5432", dbname="myDB", user="myID", password="myPW")
 cursor = connection.cursor()
 
 #QUESTION 1
@@ -135,4 +136,55 @@ def pauvrejeunes():
         
 #QUESTION 11
 def ecosoc():
-    
+    cursor.execute("""select R1.libelle, R2.poidssocial from departementenvironnement E1 join departements D1 on D1.nccenr = E1.dep join regions R1 on R1.reg = D1.reg join
+    regionsocial R2 ON R1.nccenr = R2.reg group by R1.libelle, R2.poidssocial having (sum(E1.voltaique15)/count(R2.reg)) > 10 and
+    (sum(E1.agribio16)/count(R2.reg)) > 5;""")
+    for i in cursor:
+        print ("Régions : ", i[0])
+        print ("Poids de l'économie sociale :", i[1])
+
+#MENU
+def menu():
+    print("\n*** Menu ***")
+    print("0: Quitter")
+    print("1: Afficher les régions")
+    print("2: Afficher les départements")
+    print("3: Afficher les informations d'une région")
+    print("4: Afficher les informations sociales ou environnementales d'un département")
+    print("5: Afficher la progression d'un type d'énergie d'un département en fonction du type d'énergie")
+    print("6: Afficher les départements dont la région a eu une production de granulats supérieure à 25 millions de tonnes en 2014")
+    print("7: Afficher les 5 départements avec le plus grand taux d’énergie éolienne comme source de la puissance électrique en 2015")
+    print("8: Afficher la région qui a le departement avec le plus faible taux de valorisation matière et organique en 2013")
+    print("9: Afficher la part de l'agriculture bio du département dont le pourcentage de personnes à plus de 7 minutes des services de santé est le plus grand")
+    print("10: Afficher les taux de pauvreté en 2014 dans les régions où la part de jeunes non insérés est supérieure à 30%")
+    print("""11: Afficher le poids de l'économie sociale dans les emplois salariés de la région dont la source de la puissance électrique en énergies renouvelables
+    provenait à au moins 10% de l’énergie photovoltaïque et dont la part de l’agriculture biologique dans la surface agricole totale était d’au moins 5%\n""")
+
+#MAIN
+while(True):
+    menu()
+    choix = int(input("Quelle action effectuer ?\n"))
+    if(choix == 0):
+        sys.exit(0)
+    elif(choix == 1):
+        liste_regions()
+    elif(choix == 2):
+        liste_departements()
+    elif(choix == 3):
+        choisir_region()
+    elif(choix == 4):
+        dep_infos()
+    elif(choix == 5):
+        energie_info()
+    elif(choix == 6):
+        prod_granulats()
+    elif(choix == 7):
+        max_eolienne()
+    elif(choix == 8):
+        faible_taux_orga()
+    elif(choix == 9):
+        agribiosante()
+    elif(choix == 10):
+        pauvrejeunes()
+    elif(choix == 11):
+        ecosoc()
